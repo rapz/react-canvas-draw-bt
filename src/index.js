@@ -10,6 +10,8 @@ import drawImage from "./drawImage";
 import { DefaultState } from "./interactionStateMachine";
 import makePassiveEventOption from "./makePassiveEventOption";
 
+let tempCanvas;
+
 function midPointBtw(p1, p2) {
   return {
     x: p1.x + (p2.x - p1.x) / 2,
@@ -407,17 +409,24 @@ export default class CanvasDraw extends PureComponent {
   };
 
   handleDrawStart = (e) => {
+    tempCanvas = e;
     this.interactionSM = this.interactionSM.handleDrawStart(e, this);
     this.mouseHasMoved = true;
   };
 
   handleDrawMove = (e) => {
+    tempCanvas = e;
     this.interactionSM = this.interactionSM.handleDrawMove(e, this);
     this.mouseHasMoved = true;
   };
 
   handleDrawEnd = (e) => {
     this.interactionSM = this.interactionSM.handleDrawEnd(e, this);
+    this.mouseHasMoved = true;
+  };
+
+  forceDrawStop = (e) => {
+    this.interactionSM = this.interactionSM.handleDrawEnd(tempCanvas, this);
     this.mouseHasMoved = true;
   };
 
